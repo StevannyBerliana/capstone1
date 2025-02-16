@@ -258,7 +258,6 @@ def hapus_data():
             print("\nID Transaksi tidak ditemukan! Silakan coba lagi.")
 
 # Fungsi untuk menampilkan dan merestore data dari Recycle Bin
-
 def restore_data():
     if not recycle_bin:
         print("\nRecycle Bin kosong! Tidak ada data yang bisa dipulihkan.\n")
@@ -267,16 +266,24 @@ def restore_data():
     print("\n=== Data di Recycle Bin ===")
     print(tabulate(recycle_bin, headers="keys", tablefmt="fancy_grid"))
 
-    kode = input("\nMasukkan ID Transaksi yang ingin dipulihkan: ").strip().upper()
-    item = next((transaksi for transaksi in recycle_bin if transaksi["id_transaksi"] == kode), None)
+    while True:  # Looping agar pengguna bisa mencoba lagi jika ID salah
+        kode = input("\nMasukkan ID Transaksi yang ingin dipulihkan (atau ketik 'batal' untuk kembali): ").strip().upper()
+        
+        if kode == "BATAL":  # Jika pengguna ingin membatalkan pemulihan
+            print("\nOperasi dibatalkan.\n")
+            return  # Keluar dari fungsi
 
-    if item:
-        data.append(item)  # Kembalikan ke data utama
-        recycle_bin.remove(item)  # Hapus dari Recycle Bin
-        print("\nData Berhasil Dipulihkan!\n")
-        baca_data()
-    else:
-        print("\nID tidak ditemukan di Recycle Bin!")
+        # Mencari transaksi berdasarkan ID
+        item = next((transaksi for transaksi in recycle_bin if transaksi["id_transaksi"] == kode), None)
+
+        if item:  # Jika ditemukan, kembalikan data
+            data.append(item)  # Tambahkan kembali ke data utama
+            recycle_bin.remove(item)  # Hapus dari Recycle Bin
+            print("Data Berhasil Dipulihkan!\n")
+            baca_data()  # Tampilkan data yang telah diperbarui
+            return  # Keluar dari fungsi setelah sukses
+        else:
+            print("ID tidak ditemukan di Recycle Bin! Silakan coba lagi atau ketik 'batal' untuk kembali.\n")
 
 def filter_nama_barang_dan_metode():
     daftar_barang = ["laptop", "smartphone", "smartwatch", "headset", "tablet"]
@@ -385,7 +392,7 @@ def menu_utama():
         print("7. Tampilkan Laporan Penjualan dan Pemasaran")
         print("8. Keluar")
 
-        pilihan = input("Masukkan Pilihan (1/2/3/4/5/6/7/8): ")
+        pilihan = input("Masukkan Pilihan (1/2/3/4/5/6/7/8): ").strip()
 
         if pilihan == "1":
             baca_data()
