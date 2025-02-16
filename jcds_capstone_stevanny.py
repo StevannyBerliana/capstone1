@@ -326,10 +326,15 @@ def filter_nama_barang_dan_metode():
             print("Tidak ada data yang ditemukan sesuai dengan filter yang dipilih.")
 
         # Menanyakan apakah ingin memfilter lagi
-        lanjut = input("\nApakah Anda ingin memfilter lagi? (Ya/Tidak): ").lower().strip()
-        if lanjut != 'ya':
-            print("Terima kasih telah menggunakan fitur filter!")
-            break
+        while True:
+                    lanjut = input("\nApakah Anda ingin memfilter lagi? (Ya/Tidak): ").lower().strip()
+                    if lanjut in ('ya', 'tidak'):
+                        break
+                    print("Masukkan hanya 'Ya' untuk lanjut atau 'Tidak' untuk kembali.")
+                if lanjut != 'ya':
+                    return
+        else:
+            print("\nID Transaksi tidak ditemukan! Silakan coba lagi.")
 
 def laporan_penjualan():
     print("\n=== Laporan Penjualan dan Pemasaran ===")
