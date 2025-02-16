@@ -1,8 +1,6 @@
+from tabulate import tabulate
 from datetime import datetime
 import random
-import string
-from tabulate import tabulate
-import regex as re
 
 # Koleksi data penjualan dan pemasaran
 data = [
@@ -108,12 +106,10 @@ data = [
     }
 ]
 
-
 # Fungsi read data
 def baca_data():
     print("\n=== Data Penjualan dan Pemasaran ===")
     print(tabulate(data, headers="keys", tablefmt="fancy_grid"))
-
 
 # definisikan function utk validasi angka
 def validasi_tanggal(custom):
@@ -136,25 +132,24 @@ def validasi_angka(custom):
 
 def validasi_barang(custom):
     while True:
-        nama_barang = input(custom)
+        nama_barang = input(custom).strip()
         if nama_barang.lower() in ["laptop", "smartphone", "smartwatch", "headset", "tablet"]:
             break
         else:
-            print("Nama barang tidak valid. Silakan coba lagi.")
+            print("Nama barang tidak valid. Silahkan coba lagi.")
     return nama_barang
 
 def validasi_metode(custom):
     while True:
-        metode_pemasaran = input(custom)
+        metode_pemasaran = input(custom).strip()
         if metode_pemasaran.lower() in ["ads sosial media", "email marketing", "seo"]:
             break
         else:
-            print("Metode pemasaran tidak valid. Silakan coba lagi.")
+            print("Metode pemasaran tidak valid. Silahkan coba lagi.")
     return metode_pemasaran
 
 # Fungsi untuk menghasilkan ID transaksi acak
 def generate_random_id():
-    # return "TRX" + ''.join(random.choices(string.digits, k=3))
     id_baru = f'TRX{random.randint(100, 999)}'
     if any(transaksi['id_transaksi'] == id_baru for transaksi in data):
         return generate_random_id()
@@ -197,7 +192,7 @@ def tambah_data():
 # Fungsi untuk mengupdate data penjualan
 def update_data():
     while True:
-        baca_data()  # Menampilkan data transaksi
+        baca_data()
         kode = input("\nMasukkan ID Transaksi yang ingin diubah: ").strip().upper()
         item = next((transaksi for transaksi in data if transaksi["id_transaksi"] == kode), None)
 
@@ -212,7 +207,7 @@ def update_data():
                 pilihan = validasi_angka("\nMasukkan nomor pilihan: ")
 
                 if pilihan == 1:
-                    item["nama_barang"] = validasi_barang("\nMasukkan Nama Barang Baru: ").capitalize()
+                    item["nama_barang"] = validasi_barang("\nMasukkan Nama Barang Baru: ").capitalize().strip()
                 elif pilihan == 2:
                     item["jumlah_penjualan"] = validasi_angka("\nMasukkan Jumlah Penjualan Baru: ")
                     item["total_penjualan"] = item["jumlah_penjualan"] * item["harga"]
@@ -222,7 +217,7 @@ def update_data():
                     item["total_penjualan"] = item["jumlah_penjualan"] * item["harga"]
                     print(f"Total Penjualan setelah perubahan: {item['total_penjualan']}") 
                 elif pilihan == 4:
-                    item["metode_pemasaran"] = validasi_metode("\nMasukkan Metode Pemasaran Baru: ").title()
+                    item["metode_pemasaran"] = validasi_metode("\nMasukkan Metode Pemasaran Baru: ").title().strip()
                 elif pilihan == 5:
                     item["biaya_pemasaran"] = validasi_angka("\nMasukkan Biaya Pemasaran Baru: ")
                 elif pilihan == 6:
@@ -235,19 +230,18 @@ def update_data():
                 baca_data()  # Menampilkan data yang sudah diperbarui
 
                 while True:
-                    lanjut = input("\nApakah ingin memperbarui data lain? (y/n): ").lower()
-                    if lanjut in ('y', 'n'):
+                    lanjut = input("\nApakah Anda ingin memperbarui data lain? (Ya/Tidak): ").lower().strip()
+                    if lanjut in ('ya', 'tidak'):
                         break
-                    print("Masukkan hanya 'y' untuk lanjut atau 'n' untuk kembali.")
-                if lanjut != 'y':
+                    print("Masukkan hanya 'Ya' untuk lanjut atau 'Tidak' untuk kembali.")
+                if lanjut != 'ya':
                     return
         else:
             print("\nID Transaksi tidak ditemukan! Silakan coba lagi.")
 
-recycle_bin = []
-
 # Fungsi menghapus data (dengan pemindahan ke Recycle Bin)
 
+recycle_bin = []
 def hapus_data():
     while True:
         baca_data()
@@ -257,7 +251,7 @@ def hapus_data():
         if item:
             recycle_bin.append(item)  # Simpan ke Recycle Bin
             data.remove(item)  # Hapus dari data utama
-            print("\nData Penjualan Berhasil Dihapus ke Recycle Bin!\n")
+            print("\nData Penjualan Berhasil Dihapus\n")
             baca_data()
             break
         else:
@@ -301,9 +295,9 @@ def filter_nama_barang_dan_metode():
         # Filter berdasarkan Nama Barang
         if filter_pilih == '1':
             while True:
-                nama_barang = input("Masukkan nama barang yang ingin dicari (laptop, smartphone, smartwatch, headset, tablet): ").lower()
+                nama_barang = input("Masukkan nama barang yang ingin dicari (laptop, smartphone, smartwatch, headset, tablet): ").lower().strip()
                 if nama_barang in daftar_barang:
-                    filtered_data = [transaksi for transaksi in data if transaksi['nama_barang'].lower() == nama_barang]
+                    filtered_data = [transaksi for transaksi in data if transaksi['nama_barang'].lower().strip() == nama_barang]
                     break
                 else:
                     print("Nama barang tidak valid. Silakan pilih salah satu dari: laptop, smartphone, smartwatch, headset, tablet.")
@@ -311,10 +305,9 @@ def filter_nama_barang_dan_metode():
         # Filter berdasarkan Metode Pemasaran
         elif filter_pilih == '2':
             while True:
-                metode_pemasaran = input("Masukkan metode pemasaran yang ingin dicari (ads sosial media, email marketing, seo): ").lower()
-                # Gunakan .lower() agar perbandingan lebih fleksibel
+                metode_pemasaran = input("Masukkan metode pemasaran yang ingin dicari (ads sosial media, email marketing, seo): ").lower().strip()
                 if metode_pemasaran in daftar_metode:
-                    filtered_data = [transaksi for transaksi in data if transaksi['metode_pemasaran'].lower() == metode_pemasaran]
+                    filtered_data = [transaksi for transaksi in data if transaksi['metode_pemasaran'].lower().strip() == metode_pemasaran]
                     break
                 else:
                     print("Metode pemasaran tidak valid. Silakan pilih salah satu dari: ads sosial media, email marketing, seo.")
@@ -326,15 +319,13 @@ def filter_nama_barang_dan_metode():
             print("Tidak ada data yang ditemukan sesuai dengan filter yang dipilih.")
 
         # Menanyakan apakah ingin memfilter lagi
-        lanjut = input("\nApakah ingin memfilter lagi? (y/n): ").lower()
-        if lanjut != 'y':
+        lanjut = input("\nApakah Anda ingin memfilter lagi? (Ya/Tidak): ").lower().strip()
+        if lanjut != 'ya':
             print("Terima kasih telah menggunakan fitur filter!")
             break
 
-from tabulate import tabulate
-
 def laporan_penjualan():
-    print("\n=== Laporan Penjualan ===")
+    print("\n=== Laporan Penjualan dan Pemasaran ===")
     
     # Penjualan Tertinggi dan Terendah
     transaksi_tertinggi = max(data, key=lambda x: x['total_penjualan'])
@@ -345,7 +336,7 @@ def laporan_penjualan():
         ["Penjualan Terendah", transaksi_terendah['id_transaksi'], transaksi_terendah['nama_barang'], transaksi_terendah['total_penjualan']]
     ]
     
-    print(tabulate(laporan_transaksi, headers=["Kategori", "ID Transaksi", "Nama Barang", "Total Penjualan"], tablefmt="grid"))
+    print(tabulate(laporan_transaksi, headers=["Kategori", "ID Transaksi", "Nama Barang", "Total Penjualan"], tablefmt="fancy_grid"))
     
     # Barang dengan Total Penjualan Tertinggi & Terendah
     barang_terjual = {}
@@ -364,7 +355,7 @@ def laporan_penjualan():
         ["Barang Paling Sedikit Terjual", barang_terendah, barang_terjual[barang_terendah]]
     ]
     
-    print(tabulate(laporan_barang, headers=["Kategori", "Nama Barang", "Jumlah Terjual"], tablefmt="grid"))
+    print(tabulate(laporan_barang, headers=["Kategori", "Nama Barang", "Jumlah Terjual"], tablefmt="fancy_grid"))
     
     # Metode Pemasaran Paling Berpengaruh
     pemasaran_efektif = {}
@@ -378,7 +369,7 @@ def laporan_penjualan():
     metode_terbaik = max(pemasaran_efektif, key=pemasaran_efektif.get)
     laporan_pemasaran = [[metode, total] for metode, total in pemasaran_efektif.items()]
     
-    print(tabulate(laporan_pemasaran, headers=["Metode Pemasaran", "Total Penjualan"], tablefmt="grid"))
+    print(tabulate(laporan_pemasaran, headers=["Metode Pemasaran", "Total Penjualan"], tablefmt="fancy_grid"))
     print(f"\nMetode Pemasaran Paling Efektif: {metode_terbaik}")
   
 
@@ -391,10 +382,10 @@ def menu_utama():
         print("4. Hapus Data")
         print("5. Pulihkan Data")
         print("6. Cari Data Berdasarkan Nama Barang dan Metode Pemasaran")
-        print("7. Tampilkan Laporan Penjualan")
+        print("7. Tampilkan Laporan Penjualan dan Pemasaran")
         print("8. Keluar")
 
-        pilihan = input("Masukkan Pilihan (1/2/3/4/5/6/7): ")
+        pilihan = input("Masukkan Pilihan (1/2/3/4/5/6/7/8): ")
 
         if pilihan == "1":
             baca_data()
