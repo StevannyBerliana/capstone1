@@ -331,10 +331,8 @@ def filter_nama_barang_dan_metode():
                     if lanjut in ('ya', 'tidak'):
                         break
                     print("Masukkan hanya 'Ya' untuk lanjut atau 'Tidak' untuk kembali.")
-                if lanjut != 'ya':
-                    return
-        else:
-            print("\nID Transaksi tidak ditemukan! Silakan coba lagi.")
+                    if lanjut != 'ya':
+                        return
 
 def laporan_penjualan():
     print("\n=== Laporan Penjualan dan Pemasaran ===")
