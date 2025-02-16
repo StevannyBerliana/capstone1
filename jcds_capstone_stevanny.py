@@ -285,6 +285,8 @@ def restore_data():
         else:
             print("ID tidak ditemukan di Recycle Bin! Silakan coba lagi atau ketik 'batal' untuk kembali.\n")
 
+from tabulate import tabulate  # Pastikan tabulate sudah terinstall
+
 def filter_nama_barang_dan_metode():
     daftar_barang = ["laptop", "smartphone", "smartwatch", "headset", "tablet"]
     daftar_metode = ["ads sosial media", "email marketing", "seo"]
@@ -321,18 +323,22 @@ def filter_nama_barang_dan_metode():
 
         # Menampilkan hasil pencarian
         if filtered_data:
+            print("\n=== Hasil Pencarian ===")
             print(tabulate(filtered_data, headers="keys", tablefmt="fancy_grid"))
         else:
-            print("Tidak ada data yang ditemukan sesuai dengan filter yang dipilih.")
+            print("⚠️ Tidak ada data yang ditemukan sesuai dengan filter yang dipilih.")
 
-        # Menanyakan apakah ingin memfilter lagi
+        # Menanyakan apakah ingin memfilter lagi dengan validasi input
         while True:
-                    lanjut = input("\nApakah Anda ingin memfilter lagi? (Ya/Tidak): ").lower().strip()
-                    if lanjut in ('ya', 'tidak'):
-                        break
-                    print("Masukkan hanya 'Ya' untuk lanjut atau 'Tidak' untuk kembali.")
-                    if lanjut != 'ya':
-                        return
+            lanjut = input("\nApakah Anda ingin memfilter lagi? (Ya/Tidak): ").lower().strip()
+            if lanjut in ('ya', 'tidak'):
+                break
+            print("Masukkan hanya 'Ya' untuk lanjut atau 'Tidak' untuk kembali.")
+
+        # Jika tidak ingin memfilter lagi, keluar dari fungsi
+        if lanjut != 'ya':
+            print("Terima kasih telah menggunakan fitur filter!")
+            return
 
 def laporan_penjualan():
     print("\n=== Laporan Penjualan dan Pemasaran ===")
